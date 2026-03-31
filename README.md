@@ -119,3 +119,22 @@ Some Postman features that I find useful are saving requests into a collection, 
 
 
 #### Reflection Publisher-3
+
+
+### 1. Which Observer Pattern variation is used in this tutorial?
+
+In this tutorial we are using the **Push model** of the Observer pattern. This is because when an event happens, such as a product being created, promoted, or deleted, the system directly sends the notification data to each subscriber. The publisher prepares the notification payload and sends it through an HTTP request to the subscriber’s URL.
+
+The subscribers themselves do not ask the publisher for the information. Instead, they simply receive whatever data the publisher sends. Because the publisher actively pushes the notification to all subscribers, this implementation clearly follows the Push model.
+
+### 2. Advantages and disadvantages if we used the Pull model instead
+
+If we used the **Pull model**, the publisher would only notify subscribers that something has changed, and the subscribers would then request the detailed information themselves. One advantage of this approach is that subscribers could decide exactly what information they need, which can make the system more flexible.
+
+However, for this tutorial case, the Pull model would add extra complexity. After receiving a notification, the subscriber would still need to send another request to retrieve the product data. This means more communication between systems and more API calls. For a simple notification system like this one, the Push model is more straightforward and easier to implement.
+
+### 3. What happens if we do not use multithreading?
+
+If the program does not use multithreading, notifications would be sent to subscribers one at a time in a sequential process. This means that if one subscriber’s endpoint is slow to respond, it would delay the notifications for all other subscribers.
+
+With multithreading, the program can send notifications to multiple subscribers at the same time. This improves performance and prevents one slow subscriber from blocking the entire process. Without multithreading, the program would still work, but it would be slower and less efficient when there are many subscribers.
