@@ -78,6 +78,25 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-1
 
+### 1. Do we need a trait (interface) for Subscriber?
+
+In the Observer pattern explained in the Head First Design Patterns book, `Subscriber` is usually defined as an interface because different subscribers might react to updates in different ways. However, in the BambangShop case, the subscriber is only used as a data model that stores information like the subscriber’s `url` and `name`. There is no different behavior between subscribers, and they are all treated the same way by the system.
+
+Because of this, using a single `struct Subscriber` is enough for this implementation. Introducing a trait would make the design more complicated without giving any real benefit for this project. If in the future we wanted different types of subscribers with different notification logic, then using a trait could become useful. But for now, a simple model struct is sufficient.
+
+### 2. Is Vec enough or do we need DashMap?
+
+Using a `Vec` to store subscribers would technically work, but it would not be very efficient. Since the `url` in `Subscriber` is supposed to be unique, using a `Vec` would require us to manually check the list every time we add or delete a subscriber to make sure there are no duplicates. This means we would have to iterate through the list frequently, which becomes inefficient as the number of subscribers grows.
+
+Using `DashMap` is better in this case because it behaves like a key-value dictionary. The `url` can be used as the key, so uniqueness is automatically handled by the map structure. It also allows faster lookup, insertion, and deletion compared to scanning through a `Vec`. Therefore, `DashMap` is more appropriate for this repository design.
+
+### 3. Do we still need DashMap if we use Singleton?
+
+The Singleton pattern ensures that there is only one instance of the subscribers storage in the program. In this implementation, we already apply this idea using a static variable (`SUBSCRIBERS`) so that all parts of the program access the same data.
+
+However, Singleton alone does not solve the problem of thread safety. Since this application may handle multiple requests at the same time, different threads could try to read or modify the subscriber list simultaneously. `DashMap` helps solve this by providing a thread-safe hashmap that can be safely accessed from multiple threads.
+
+Because of that, Singleton and `DashMap` serve different purposes. Singleton ensures there is only one shared data source, while `DashMap` ensures that concurrent access to that data is safe. Therefore, we still need `DashMap` even though the storage behaves like a Singleton.
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
