@@ -99,4 +99,23 @@ However, Singleton alone does not solve the problem of thread safety. Since this
 Because of that, Singleton and `DashMap` serve different purposes. Singleton ensures there is only one shared data source, while `DashMap` ensures that concurrent access to that data is safe. Therefore, we still need `DashMap` even though the storage behaves like a Singleton.
 #### Reflection Publisher-2
 
+### 1. Why do we need to separate Service and Repository from Model?
+
+Even though in basic MVC the Model can cover both data and logic, separating `Service` and `Repository` makes the code much cleaner and easier to manage. The `Model` should mainly represent the data structure, such as what fields a `Subscriber` or `Notification` has. The `Repository` focuses on how the data is stored, retrieved, added, or deleted, while the `Service` handles the business logic of the application.
+
+In my opinion, this separation is useful because each part has a clearer responsibility. If everything is placed inside the Model, the code can become too crowded and harder to maintain. By splitting them, the project becomes easier to read, easier to test, and easier to modify later if the storage method or business rules change.
+
+### 2. What happens if we only use the Model?
+
+If we only use the Model, then each model would likely contain not only its own data but also storage logic and application logic. For example, `Subscriber` might need to handle subscribing, unsubscribing, checking duplicates, and maybe even sending notifications. `Notification` might also start handling formatting or delivery logic, while `Program` could end up interacting directly with both of them. This would make each model do too many things at once.
+
+As a result, the interactions between `Program`, `Subscriber`, and `Notification` would become more tightly coupled, and the code complexity would increase. A change in one feature could force us to modify several models at once. That kind of design would make the code harder to understand, debug, and extend. So even though using only the Model may look simpler at first, in a bigger application it would probably create more confusion.
+
+### 3. Postman and how it helps testing
+
+Yes, I have explored Postman a bit more, and I think it is very helpful for testing APIs during development. Postman makes it easier to send HTTP requests like `GET` and `POST` without needing to build the frontend first. In this project, it is useful for checking whether the subscribe and unsubscribe endpoints work correctly, whether the request body is accepted properly, and whether the response matches what we expect.
+
+Some Postman features that I find useful are saving requests into a collection, editing request bodies easily, and seeing the response status and JSON output directly. I also think collections and environment variables would be very helpful for future group projects, especially when testing many endpoints or switching between local and deployed versions of an app. For software engineering projects in general, Postman seems useful because it makes backend testing faster, more organized, and more practical.
+
+
 #### Reflection Publisher-3
