@@ -10,6 +10,7 @@ lazy_static! {
 pub struct SubscriberRepository;
 
 impl SubscriberRepository {
+
     pub fn add(product_type: &str, subscriber: Subscriber) -> Subscriber {
     let subscriber_value = subscriber.clone();
     if SUBSCRIBERS.get(product_type).is_none() {
@@ -19,5 +20,14 @@ impl SubscriberRepository {
     SUBSCRIBERS.get(product_type).unwrap()
         .insert(subscriber_value.url.clone(), subscriber_value);
     return subscriber;
+}
+
+pub fn list_all(product_type: &str) -> Vec<Subscriber> {
+    if SUBSCRIBERS.get(product_type).is_none() {
+        SUBSCRIBERS.insert(String::from(product_type), DashMap::new());
+    };
+
+    return SUBSCRIBERS.get(product_type).unwrap().iter()
+        .map(|f| f.value().clone()).collect();
 }
 }
